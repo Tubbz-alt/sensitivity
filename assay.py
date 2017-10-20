@@ -62,8 +62,12 @@ class Assay:
 
     # FlatTop
     elif method == 'FlatTop':
-      value = abs(np.random.normal(0, self.params['limit']/1.64))
-      if value < self.params['limit']: # flat portion
+      if np.random.rand() > 0.9:
+        while(True):
+          value = abs(np.random.normal(self.params['limit'], self.params['limit']/1.64))
+          #value = abs(np.random.normal(0., self.params['limit']/1.64))
+          if value > self.params['limit']: break
+      else:
         value = self.params['limit']*np.random.rand()
 
     else:
@@ -82,7 +86,8 @@ if __name__ == '__main__':
   s = [] 
   histo = TH1D('histo','histo',500,-1,5)
   for i in range(1000000):
-    histo.Fill(assay.throw('Gaussian'))
+    histo.Fill(assay.throw('FlatTop'))
+    #histo.Fill(assay.throw('Gaussian'))
     #histo.Fill(assay.throw('Delta'))
     #histo.Fill(assay.throw('Uniform'))
 
