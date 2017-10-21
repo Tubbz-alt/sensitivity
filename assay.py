@@ -48,7 +48,7 @@ class Assay:
 
     # Delta
     elif method == 'Delta':
-      value = self.params['limit']
+      value = 1.*self.params['limit']
 
     # Exponential
     elif method == 'Exponential':
@@ -69,6 +69,22 @@ class Assay:
           if value > self.params['limit']: break
       else:
         value = self.params['limit']*np.random.rand()
+ 
+    # Plateau
+    elif method == 'Plateau':
+      mu = self.params['limit']*np.random.rand()
+      sigma = self.params['limit']/1.64
+      while True:
+        value = np.random.normal(mu,sigma)
+        if value >= 0: break
+
+    # Truncated Gaussian
+    elif method == 'TruncatedGaussian':
+      mu = self.params['original']['mu']
+      sigma = self.params['original']['sigma']
+      while True:
+        value = np.random.normal(mu,sigma)
+        if value >= 0: break
 
     else:
       value = 0
@@ -86,7 +102,7 @@ if __name__ == '__main__':
   s = [] 
   histo = TH1D('histo','histo',500,-1,5)
   for i in range(1000000):
-    histo.Fill(assay.throw('FlatTop'))
+    histo.Fill(assay.throw('Plateau'))
     #histo.Fill(assay.throw('Gaussian'))
     #histo.Fill(assay.throw('Delta'))
     #histo.Fill(assay.throw('Uniform'))
