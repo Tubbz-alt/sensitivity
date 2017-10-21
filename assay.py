@@ -86,6 +86,14 @@ class Assay:
         value = np.random.normal(mu,sigma)
         if value >= 0: break
 
+    # Plateau
+    elif method == 'Plateau':
+      mu = self.params['limit']*np.random.rand()
+      sigma = self.params['limit']/1.64
+      while True:
+        value = np.random.normal(mu,sigma)
+        if value >= 0: break
+
     else:
       value = 0
 
