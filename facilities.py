@@ -37,7 +37,7 @@ class HPGe:
     if sig > 1.64 * sigerr:
       ans = {'mu': sig/norm, 'sigma': sigerr/norm}
     else:
-      ans = {'limit': 1.64 * sigerr/norm}
+      ans = {'limit': 1.64 * sigerr/norm, 'original':{'mu': sig/norm, 'sigma': sigerr/norm} }
     return ans
 
 '''
