@@ -36,6 +36,8 @@ class HPGe:
     # signal is above discovery threshold.
     if sig > 1.64 * sigerr:
       ans = {'mu': sig/norm, 'sigma': sigerr/norm}
+    elif sig > 0:
+      ans = {'limit': (1.64 * sigerr + sig)/norm, 'original':{'mu': sig/norm, 'sigma': sigerr/norm} }
     else:
       ans = {'limit': 1.64 * sigerr/norm, 'original':{'mu': sig/norm, 'sigma': sigerr/norm} }
     return ans
@@ -52,7 +54,6 @@ class ICPMS:
     sample_mat = icpms.Material("sample",{"U238": [trueimp, 0]})
     blank_mat =  icpms.Material("blank", {"U238": [self.blank, self.blanksigma]})
     tracer_mat = icpms.Material("tracer",{"U233": [self.tracer, 0]})
-
     ans, fullresult, lod = icpms.assay(sample_mat, blank_mat, tracer_mat, mass=mass, icpms_prob=self.prob)
     return ans
 '''

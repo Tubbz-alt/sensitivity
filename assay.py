@@ -4,39 +4,14 @@ class Assay:
   def __init__(self,params):
     self.params = params
 
-  def parse(self,method):
+  def throw(self,method):
+    #self.parse(method)
+
     # Gaussian
     if method == 'Gaussian' or 'mu' in self.params.keys():
       if 'limit' in self.params.keys():
         self.params['mu'] = 0
         self.params['sigma'] = self.params['limit']/1.64485
-
-    # Uniform 
-    elif method == 'Uniform':
-      self.params['lowerlimit'] = 0
-      self.params['upperlimit'] = self.params['limit']/0.9
-
-    # Delta
-    #elif method == 'Delta':
-
-    # Exponential
-    elif method == 'Exponential':
-      self.params['lambda'] = -math.log(1.-0.9)/self.params['limit']
-
-    # Half-cauchy
-    elif method == 'Cauchy':
-      self.params['x0'] = 0
-      self.params['gamma'] = self.params['limit']/math.tan((0.95-0.5)*math.pi)
-
-    # FlatTop
-    #elif method == 'FlatTop':
-      
-
-  def throw(self,method):
-    self.parse(method)
-
-    # Gaussian or Half-gaussian
-    if method == 'Gaussian' or 'mu' in self.params.keys():
       
       while True:
         value = np.random.normal(self.params['mu'],self.params['sigma'])
@@ -44,7 +19,9 @@ class Assay:
 
     # Uniform 
     elif method == 'Uniform':
-      value = 1.*(self.params['upperlimit']-self.params['lowerlimit'])*np.random.rand() + self.params['lowerlimit']
+      lowerlimit = 0
+      upperlimit = self.params['limit']/0.9
+      value = 1.*(upperlimit-lowerlimit)*np.random.rand() + lowerlimit
 
     # Delta
     elif method == 'Delta':
@@ -52,12 +29,15 @@ class Assay:
 
     # Exponential
     elif method == 'Exponential':
-      value = np.random.exponential(1./self.params['lambda'])
+      lam = -math.log(1.-0.9)/self.params['limit']
+      value = np.random.exponential(1./lam)
 
     # Half-cauchy
     elif method == 'Cauchy':
+      x0 = 0
+      gamma = self.params['limit']/math.tan((0.95-0.5)*math.pi)
       while True:
-        value = self.params['x0']+self.params['gamma']*np.random.standard_cauchy()
+        value = x0+gamma*np.random.standard_cauchy()
         if value >= 0: break
 
     # FlatTop
@@ -86,10 +66,10 @@ class Assay:
         value = np.random.normal(mu,sigma)
         if value >= 0: break
 
-    # Plateau
-    elif method == 'Plateau':
-      mu = self.params['limit']*np.random.rand()
-      sigma = self.params['limit']/1.64
+    # Truncated Gaussian with Nonzero Mu
+    elif method == 'TNZGaussian':
+      mu = max(0.,self.params['original']['mu'])
+      sigma = self.params['original']['sigma']
       while True:
         value = np.random.normal(mu,sigma)
         if value >= 0: break
