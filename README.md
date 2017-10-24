@@ -14,47 +14,6 @@ When a radioactivity measurement is made (albeit imprecise), the radioactivity l
 
 The purpose of this set of scripts is to investigate how the choice of a Bayesian prior for a radioactivity limit affects the calculated sensitivity, and hence inform us the proper choice.
 
-## Details
-
-The user code is in `toysens.main()`.
-
-First, the user needs to specify, for each part of the Detector in the actual experiment, 
-the true specific activity, the hit efficiency and the mass. For example, for `ncomp` identical parts:
-```
-from detector import Detector, Component
-comps = []
-for ic in range(ncomp):
-  comps.append(Component(spec_act,eff,mass))
-det = Detector(comps)
-```
-Then define the detector for radioassay, e.g. an HPGe detector.:
-```
-from facilities import HPGe
-ge = HPGe(10./86400.)
-```
-Let the detector perform an assay measurement and associate it with the assayed component:
-```
-from assay import Assay
-result = ge.count(comp.trueimp,1,livetime=14*86400)
-comp.assay = Assay(result)
-```
-Finally perform a sensitivity calculation:
-```
-livetime = 10*365*86400 # Experiment livetime in seconds
-method = 'Uniform'      # Way to interpret limits
-nsenstoys = 10000       # Number of toys used in sensitivity calculation
-usetruth = False        # Use true radioassay values. If False, use assayed values and interpret according to "method".
-sens, uls = calc_sens(det, method, livetime, nsenstoys, usetruth)
-```
-It will return the 90% C.L. upper limits (`uls`) and their median (`sens`)
-
-Some ways to interpret a radioactivity limit include:
-1. Delta:
-2. Gaussian:
-   1. Allow negative Mu's
-   2. Mu's are non-negative
-3. Uniform:
-
 ## Code
 
 ### Prerequisites
@@ -63,12 +22,53 @@ Some ways to interpret a radioactivity limit include:
 3. numpy (for random number generation and miscellaneous numerical utilities)
 
 ### Usage
+
+The user code is in `toysens.main()`.
+
+First, the user needs to specify, for each part of the Detector in the actual experiment, 
+the true specific activity, the hit efficiency and the mass. For example, for `ncomp` identical parts:
+```
+from detector import Detector, Component
+comps = []
+spec_act = 1e-6 # Specific activity of the part in Bq/kg
+eff = 0.1       # Hit efficiency of the part in the actual detector
+mass = 1.       # Mass of the part in kg
+for ic in range(ncomp):
+  comps.append(Component(spec_act,eff,mass))
+det = Detector(comps)
+```
+Then define the detector for radioassay, e.g. an HPGe detector.:
+```
+from facilities import HPGe
+ge = HPGe(10./86400.)  # Background rate of HPGe in counts per second
+```
+Let the detector perform an assay measurement and associate it with the assayed component:
+```
+from assay import Assay
+assayed_mass = 1.   # Mass of part being assayed in kg
+result = ge.count(comp.trueimp,assayed_mass,livetime=14*86400)
+comp.assay = Assay(result)
+```
+Finally perform a sensitivity calculation:
+```
+livetime = 10*365*86400 # Experiment livetime in seconds
+method = 'Uniform'      # Way to interpret limits
+nsenstoys = 10000       # Number of toys used in sensitivity calculation
+usetruth = False        # If True, use true radioassay values. If False, use assayed values and interpret according to "method".
+sens, uls = calc_sens(det, method, livetime, nsenstoys, usetruth)
+```
+It will return the 90% C.L. upper limits (`uls`) and their median (`sens`)
+
+Available `method`s: 'Delta', 'Gaussian', 'Uniform', etc. (See assay.py)
+
+### Quick start
+
 `python toysens.py <ntoys> <true_lambda> <ncomp> <spec_act> <livetime> <method> <nsenstoys>`
 
-1. `ntoys`: Number of toy MCs
-2. `true_lambda`: 
-3. `ncomp`: 
-4. `spec_act`:
-5. `livetime`: 
-6. `method`: "Truth", "Gaussian",
-7. `nsenstoys`:
+1. `ntoys`: Number of toy MCs for the assay procedure
+2. `true_lambda`: Expected true total background rate
+3. `ncomp`: Number of parts
+4. `spec_act`: Specific activity of every part
+5. `livetime`: Livetime of the experiment
+6. `method`: Method to interpret assay results
+7. `nsenstoys`: Number of toy MCs used in each sensitivity calculation
