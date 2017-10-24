@@ -17,10 +17,9 @@ The purpose of this set of scripts is to investigate how the choice of a Bayesia
 Some ways to interpret a radioactivity limit include:
 1. Delta:
 2. Gaussian:
-  * Allow negative Mu's
-  * Mu's are non-negative
+   1. Allow negative Mu's
+   2. Mu's are non-negative
 3. Uniform:
-
 
 ## Code
 
