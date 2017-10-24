@@ -10,7 +10,7 @@ The expected background rate (parameter lambda for the Poisson distribution) for
 
 As the radiopurities of the parts improve, the radioactivity levels may not be precisely measured, or worse still, only an upper limit can be set. In such cases, the radioactivity levels are treated as an additional stochastic element in the sensitivity calculation in a Bayesian sense. 
 
-When a radioactivity measurement is made (albeit imprecise), the radioactivity level is typically treated as a Gaussian with mu equals the central value, whereas sigma equals the "error" of the measurement. When only a limit is reported, there isn't an intuitive way to interpret such a result as a Bayesian prior. 
+When a radioactivity measurement is made (albeit imprecise), the radioactivity level is typically treated as a Gaussian with mu equals the central value and sigma equals the "error" of the measurement. Whereas only a limit is reported, there isn't an intuitive way to interpret such a result as a Bayesian prior. 
 
 The purpose of this set of scripts is to investigate how the choice of a Bayesian prior for a radioactivity limit affects the calculated sensitivity.
 
