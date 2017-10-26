@@ -6,7 +6,7 @@ import os
 import cPickle as pickle
 import numpy as np
 from ROOT import *
-from TimeProfiler import *
+#from TimeProfiler import *
 
 gROOT.SetBatch(1)
 #gStyle.SetOptStat(0)
@@ -136,7 +136,7 @@ def analyze(samples, blanks, tracer_mat, masses):
 
   return ans, fullresult, lod
 
-@profile
+#@profile
 def toy(mu_s, sigma_s, mu_b, sigma_b, n_iter):
 
   copper_mat = Material('copper',{'U238':[mu_s, mu_s*sigma_s]}) #,'Th232':[5,1]})
@@ -165,7 +165,7 @@ def toy(mu_s, sigma_s, mu_b, sigma_b, n_iter):
   return data
 
 # Main program
-@profile
+#@profile
 def main():
   #mus_range =    [1.] 
   #mub_range =    [10.e-2]
@@ -195,8 +195,8 @@ def main():
     
               data = toy(mus,sigmas,mub,sigmab,niter)
               pickle.dump(data,open(fn,'wb'))
-              print_prof_data()
-              clear_prof_data()
+              #print_prof_data()
+              #clear_prof_data()
     
 if __name__ == '__main__':
   main()

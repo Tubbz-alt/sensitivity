@@ -1,5 +1,5 @@
 import numpy as np
-from TimeProfiler import *
+#from TimeProfiler import *
 import math,sys
 
 from detector import Detector, Component
@@ -18,8 +18,8 @@ gROOT.SetBatch(1)
 gStyle.SetOptStat(0)
 FeldmanCousins = TFeldmanCousins()
 
-@profile
-def main(ntoys, true_lambda, ncomp, spec_act, livetime, method, nsenstoys): #, usetruth):
+#@profile
+def main(ntoys, true_lambda, ncomp, spec_act, livetime, method, nsenstoys):
 
   mass = 1  #per comp
   eff = 1.*true_lambda/ncomp/spec_act/livetime/mass
@@ -151,7 +151,6 @@ if __name__ == '__main__':
   nsenstoys = int(sys.argv[7])
   #usetruth = int(sys.argv[8])
  
-  main(ntoys, true_lambda, ncomp, spec_act, livetime, method, nsenstoys) #, usetruth)
- # main(int(sys.argv[1]),int(sys.argv[2]))
-  print_prof_data()
+  main(ntoys, true_lambda, ncomp, spec_act, livetime, method, nsenstoys)
+  #print_prof_data()
 
