@@ -1,4 +1,5 @@
 import numpy as np
+from scipy import special
 
 class Assay:
   def __init__(self,params):
@@ -8,7 +9,7 @@ class Assay:
     #self.parse(method)
 
     # Gaussian
-    if method == 'Gaussian' or 'mu' in self.params.keys():
+    if method == 'Gaussian' or ('mu' in self.params.keys() and method != 'Hypergeometric'):
       if 'limit' in self.params.keys():
         self.params['mu'] = 0
         self.params['sigma'] = self.params['limit']/1.64485
@@ -73,6 +74,18 @@ class Assay:
       while True:
         value = np.random.normal(mu,sigma)
         if value >= 0: break
+    
+    # Hypergeometric
+    elif method == 'Hypergeometric':
+      s = self.params['original']['src']
+      b = self.params['original']['bkg']
+      #print s,b
+      while True:
+        value = np.random.rand() #om(0,1)  ## 
+        y = np.random.rand() #om(0,1)
+        if y < hgprior(value, [1, s, b]): 
+          value /= self.params['original']['norm']
+          break
 
     else:
       value = 0
@@ -82,15 +95,44 @@ class Assay:
   def __repr__(self):
     return str(self.params)
 
+def hgprior(x,par):
+  s = par[1]
+  b = par[2]
+  A = par[0]
+  mu = x
+  value = A* math.exp(-mu) * (mu**(s+b+1)) * special.hyperu(b+1,s+b+2,2*mu)
+  '''
+  value = A* math.exp(-mu) 
+  print 'a',value
+  for i in range(1,s):
+    value /= i
+    value *= mu
+  print 'b',value
+  for i in range(b+1):
+    value *= mu
+  print 'c',value
+  value *= special.hyperu(b+1,s+b+2,2*mu)
+  print 'z',value
+  return value
+  '''
+  for i in range(1,s):
+    value /= i
+  return value
+  #return A* math.exp(-mu) * (mu**(s+b+1)) / math.factorial(s) * special.hyperu(b+1,s+b+2,2*mu) 
+
 from ROOT import * 
 import math
+from facilities import HPGe
 gROOT.SetBatch(1)
 if __name__ == '__main__':
-  assay = Assay({'limit':1.64})
+  ge = HPGe(10./86400.)
+  
+  assay = Assay(ge.count(100e-6,1,livetime=14*86400))
+ 
   s = [] 
-  histo = TH1D('histo','histo',500,-1,5)
-  for i in range(1000000):
-    histo.Fill(assay.throw('Plateau'))
+  histo = TH1D('histo','histo',500,-10e-6,200e-6)
+  for i in range(100000):
+    histo.Fill(assay.throw('Gaussian'))
     #histo.Fill(assay.throw('Gaussian'))
     #histo.Fill(assay.throw('Delta'))
     #histo.Fill(assay.throw('Uniform'))
