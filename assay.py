@@ -9,7 +9,7 @@ class Assay:
     #self.parse(method)
 
     # Gaussian
-    if method == 'Gaussian' or ('mu' in self.params.keys() and method != 'Hypergeometric'):
+    if method == 'Gaussian' or ('mu' in self.params.keys() and (method not in ['Hypergeometric', 'Central'])):
       if 'limit' in self.params.keys():
         self.params['mu'] = 0
         self.params['sigma'] = self.params['limit']/1.64485
@@ -17,6 +17,13 @@ class Assay:
       while True:
         value = np.random.normal(self.params['mu'],self.params['sigma'])
         if value >= 0: break
+
+    # Central value
+    elif method == 'Central':
+      if 'limit' in self.params.keys():
+        value = self.params['limit']
+      else:
+        value = self.params['mu']
 
     # Uniform 
     elif method == 'Uniform':
