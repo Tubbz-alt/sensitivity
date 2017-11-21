@@ -17,6 +17,7 @@ from ROOT import *
 gROOT.SetBatch(1)
 gStyle.SetOptStat(0)
 FeldmanCousins = TFeldmanCousins()
+fc_cache = {}
 
 #@profile
 def main(ntoys, true_lambda, ncomp, spec_act, livetime, method, nsenstoys):
@@ -58,7 +59,7 @@ def main(ntoys, true_lambda, ncomp, spec_act, livetime, method, nsenstoys):
     for i in range(ntoys):
       true_sens, true_uls = calc_sens(det, method, livetime, nsenstoys, True)
       print('Sensitivity', true_sens)
-      print('Upperlimits', true_uls)
+      #print('Upperlimits', true_uls)
       #print('RMS', np.std(true_uls))
       #print_histo(true_uls)
       print
@@ -78,7 +79,7 @@ def main(ntoys, true_lambda, ncomp, spec_act, livetime, method, nsenstoys):
       sens, uls = calc_sens(det, method, livetime, nsenstoys, False)
 
       print('Sensitivity', sens, nlimits)
-      print('Upperlimits', uls)
+      #print('Upperlimits', uls)
       print
 
 #@profile
@@ -94,6 +95,11 @@ def print_histo(l):
 
 #@profile
 def feldman(counts,true_counts):
+
+  cache_key = str([counts,"%.2f"%true_counts])
+  if cache_key in fc_cache.keys():
+    return fc_cache[cache_key]
+
   FeldmanCousins.SetMuStep(0.005)
   FeldmanCousins.SetMuMax(max(5.*counts,10))
   fcll = -999
@@ -116,12 +122,14 @@ def feldman(counts,true_counts):
   if fcll == -999 or fcul == 0:
     print('!!!',counts,true_counts, fcll, fcul)
 
+  fc_cache[cache_key] = fcul
   return fcul
 
 #@profile
 def calc_sens(det, method, livetime, ntoys, truth):
   
   upperlimits = []
+  meanul = 0
 
   ult_truth = det.truth()*livetime
 
@@ -133,9 +141,13 @@ def calc_sens(det, method, livetime, ntoys, truth):
 
     fcul = feldman(counts,true_counts)
 
-    upperlimits.append(fcul)
+    #upperlimits.append(fcul)
+    meanul += fcul
 
-  return np.percentile(upperlimits,50), upperlimits
+  meanul /= ntoys
+  #return np.percentile(upperlimits,50), upperlimits
+  #return np.mean(upperlimits), upperlimits
+  return meanul, upperlimits
   
 if __name__ == '__main__':
   if len(sys.argv) < 8: 
@@ -153,4 +165,4 @@ if __name__ == '__main__':
  
   main(ntoys, true_lambda, ncomp, spec_act, livetime, method, nsenstoys)
   #print_prof_data()
-
+  print('cache_size',len(fc_cache))

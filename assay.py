@@ -9,7 +9,7 @@ class Assay:
     #self.parse(method)
 
     # Gaussian
-    if method == 'Gaussian' or ('mu' in self.params.keys() and (method not in ['Hypergeometric', 'Central'])):
+    if method == 'Gaussian' or ('mu' in self.params.keys() and (method not in ['Hypergeometric', 'Central', 'CTG'])):
       if 'limit' in self.params.keys():
         self.params['mu'] = 0
         self.params['sigma'] = self.params['limit']/1.64485
@@ -21,9 +21,9 @@ class Assay:
     # Central value
     elif method == 'Central':
       if 'limit' in self.params.keys():
-        value = self.params['limit']
+        value = 1.*self.params['limit']
       else:
-        value = self.params['mu']
+        value = 1.*self.params['mu']
 
     # Uniform 
     elif method == 'Uniform':
@@ -73,6 +73,17 @@ class Assay:
       while True:
         value = np.random.normal(mu,sigma)
         if value >= 0: break
+
+    # Truncated Gaussian, Central
+    elif method == 'CTG':
+      if 'limit' in self.params.keys():
+        mu = self.params['original']['mu']
+        sigma = self.params['original']['sigma']
+        while True:
+          value = np.random.normal(mu,sigma)
+          if value >= 0: break
+      else:
+        value = 1.*self.params['mu']
 
     # Truncated Gaussian with Nonzero Mu
     elif method == 'TNZGaussian':
