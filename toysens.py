@@ -21,6 +21,7 @@ fc_cache = {}
 
 #@profile
 def main(ntoys, true_lambda, ncomp, spec_act, livetime, method, nsenstoys):
+
   # Define detector and its parts
   comps = []
   mass = 1  #per comp
