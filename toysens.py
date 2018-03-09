@@ -21,33 +21,47 @@ fc_cache = {}
 
 #@profile
 def main(ntoys, true_lambda, ncomp, spec_act, livetime, method, nsenstoys):
-
+  # Define detector and its parts
+  comps = []
   mass = 1  #per comp
-  eff = 1.*true_lambda/ncomp/spec_act/livetime/mass
+  usetruth = (method == 'Truth')
 
   print('Arguments:')
   print('ntoys',ntoys)
   print('true_lambda',true_lambda)
   print('ncomp',ncomp)
-  print('spec_act',spec_act)
   print('livetime',livetime)
   print('method',method)
   print('nsenstoys',nsenstoys)
-  #print('usetruth',usetruth)
   print('mass',mass)
-  print('eff',eff)
-  usetruth = (method == 'Truth')
-  # ===
 
-  # Define detector and its parts
-  comps = []
-  for ic in range(ncomp):
-    comps.append(Component(spec_act,eff,mass))
-  det = Detector(comps)
+  if ncomp == 0: # Realistic detector
+    spec_acts = [5e-6, 20e-6, 100e-6]
+
+    nregions = len(spec_acts)
+    nparts = 10    # Number of parts 
+    budgetPerPart = true_lambda/nregions/nparts
+   
+    effs = [1.*budgetPerPart/s/livetime/mass for s in spec_acts]
+
+    print('spec_acts',spec_acts)
+    print('effs',effs)
+
+    for s,e in zip(spec_acts,effs):
+      for i in range(nparts):
+        comps.append(Component(s,e,mass))
+
+  else: # Detector with identical parts
+    eff = 1.*true_lambda/ncomp/spec_act/livetime/mass
   
-  #c1 = Component(0.2e-4, 0.0007927447995, 1)  # Bq/kg,  eff,  mass
-  #c2 = Component(0.2e-4, 0.0007927447995, 1)
-  #det = Detector([c1, c2])
+    print('spec_act',spec_act)
+    print('eff',eff)
+    # ===
+
+    for ic in range(ncomp):
+      comps.append(Component(spec_act,eff,mass))
+  det = Detector(comps)
+  print('det',det)
 
   # Assay settings
   ge = HPGe(10./86400.)
@@ -140,6 +154,7 @@ def calc_sens(det, method, livetime, ntoys, truth):
     counts = np.random.poisson(true_counts)
 
     fcul = feldman(counts,true_counts)
+    print('fcul',fcul)
 
     #upperlimits.append(fcul)
     meanul += fcul

@@ -8,106 +8,44 @@ class Assay:
   def throw(self,method):
     #self.parse(method)
 
-    # Gaussian
-    if method == 'Gaussian' or ('mu' in self.params.keys() and (method not in ['Hypergeometric', 'Central', 'CTG'])):
-      if 'limit' in self.params.keys():
-        self.params['mu'] = 0
-        self.params['sigma'] = self.params['limit']/1.64485
-      
-      while True:
-        value = np.random.normal(self.params['mu'],self.params['sigma'])
-        if value >= 0: break
-
-    # Central value
-    elif method == 'Central':
-      if 'limit' in self.params.keys():
-        value = 1.*self.params['limit']
-      else:
+    if 'mu' in self.params.keys():  # Discovery
+      if method in ['Central', 'DeltaUniform', 'DeltaGauss0', 'CTG']:  # Delta/*
         value = 1.*self.params['mu']
-
-    # Uniform 
-    elif method == 'Uniform':
-      lowerlimit = 0
-      upperlimit = self.params['limit']/0.9
-      value = 1.*(upperlimit-lowerlimit)*np.random.rand() + lowerlimit
-
-    # Delta
-    elif method == 'Delta':
-      value = 1.*self.params['limit']
-
-    # Exponential
-    elif method == 'Exponential':
-      lam = -math.log(1.-0.9)/self.params['limit']
-      value = np.random.exponential(1./lam)
-
-    # Half-cauchy
-    elif method == 'Cauchy':
-      x0 = 0
-      gamma = self.params['limit']/math.tan((0.95-0.5)*math.pi)
-      while True:
-        value = x0+gamma*np.random.standard_cauchy()
-        if value >= 0: break
-
-    # FlatTop
-    elif method == 'FlatTop':
-      if np.random.rand() > 0.9:
-        while(True):
-          value = abs(np.random.normal(self.params['limit'], self.params['limit']/1.64))
-          #value = abs(np.random.normal(0., self.params['limit']/1.64))
-          if value > self.params['limit']: break
+      elif method in ['Delta', 'Uniform', 'Gaussian', 'TruncatedGaussian']:  # Gauss/*
+        while True:
+          value = np.random.normal(self.params['mu'],self.params['sigma'])
+          if value >= 0: break
       else:
-        value = self.params['limit']*np.random.rand()
- 
-    # Plateau
-    elif method == 'Plateau':
-      mu = self.params['limit']*np.random.rand()
-      sigma = self.params['limit']/1.64
-      while True:
-        value = np.random.normal(mu,sigma)
-        if value >= 0: break
+        value = 0
 
-    # Truncated Gaussian
-    elif method == 'TruncatedGaussian':
-      mu = self.params['original']['mu']
-      sigma = self.params['original']['sigma']
-      while True:
-        value = np.random.normal(mu,sigma)
-        if value >= 0: break
+    else:  # Limit
 
-    # Truncated Gaussian, Central
-    elif method == 'CTG':
-      if 'limit' in self.params.keys():
+      if method in ['Central', 'Delta']:  #*/Delta
+        value = 1.*self.params['limit']
+
+      elif method in ['DeltaUniform', 'Uniform']: #*/Uniform
+        lowerlimit = 0
+        upperlimit = self.params['limit']/0.9
+        value = 1.*(upperlimit-lowerlimit)*np.random.rand() + lowerlimit
+
+      elif method in ['DeltaGauss0', 'Gaussian']: #*/Gauss0
+        mu = 0
+        sigma = self.params['limit']/1.64485
+        while True:
+          value = np.random.normal(mu,sigma)
+          if value >= 0: break
+
+      elif method in ['CTG','TruncatedGaussian']:  #*/Gauss
         mu = self.params['original']['mu']
         sigma = self.params['original']['sigma']
         while True:
           value = np.random.normal(mu,sigma)
           if value >= 0: break
+
       else:
-        value = 1.*self.params['mu']
+        value = 0
 
-    # Truncated Gaussian with Nonzero Mu
-    elif method == 'TNZGaussian':
-      mu = max(0.,self.params['original']['mu'])
-      sigma = self.params['original']['sigma']
-      while True:
-        value = np.random.normal(mu,sigma)
-        if value >= 0: break
-    
-    # Hypergeometric
-    elif method == 'Hypergeometric':
-      s = self.params['original']['src']
-      b = self.params['original']['bkg']
-      #print s,b
-      while True:
-        value = np.random.rand() #om(0,1)  ## 
-        y = np.random.rand() #om(0,1)
-        if y < hgprior(value, [1, s, b]): 
-          value /= self.params['original']['norm']
-          break
-
-    else:
-      value = 0
-
+    print('assay',value)
     return value
 
   def __repr__(self):
