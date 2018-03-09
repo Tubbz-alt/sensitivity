@@ -60,6 +60,7 @@ sens, uls = calc_sens(det, method, livetime, nsenstoys, usetruth)
 It will return the 90% C.L. upper limits (`uls`) and their mean (`sens`)
 
 Available priors (`method`): 
+
 | Option | Central value | Limits |
 | ------ | ------------- | ------ |
 | `Central` | Delta | Delta |
