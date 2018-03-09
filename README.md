@@ -2,24 +2,12 @@
 
 This is a collection of simple python scripts to calculate the sensitivity for a basic counting experiment under different interpretations of radioassay results.
 
-## Purpose
-
-Sensitivity of low background experiments (e.g. double beta decay and dark matter searches) is often calculated by toy Monte Carlo assuming all background components are Poisson random variables. 
-
-The expected background rate (parameter lambda for the Poisson distribution) for each component is essentially the product of the hit efficiency determined by detector simulation and the radioactivity level of the part determined by dedicated radioassay measurements (e.g. by HPGe counting or ICP-MS).
-
-As the radiopurities of the parts improve, the radioactivity levels may not be precisely measured, sometime only an upper limit can be set. In such cases, the radioactivity levels are treated as a Bayesian prior. 
-
-The purpose of this set of scripts is to investigate how the choice of a Bayesian prior for a radioactivity limit affects the calculated sensitivity, and hence inform us the proper choice.
-
-## Code
-
-### Prerequisites
+## Prerequisites
 1. Python 2.7
 2. PyROOT (for histogramming and Feldman-Cousins calculator)
 3. numpy (for random number generation and miscellaneous numerical utilities)
 
-### Usage
+## Usage
 
 The user code is in `toysens.main()`.
 
@@ -74,7 +62,7 @@ Available priors (`method`):
 
 (See assay.py)
 
-### Quick start
+## Quick start
 
 `python toysens.py <ntoys> <true_lambda> <ncomp> <spec_act> <livetime> <method> <nsenstoys>`
 
