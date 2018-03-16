@@ -45,7 +45,7 @@ class Assay:
       else:
         value = 0
 
-    print('assay',value)
+    #print('assay',value)
     return value
 
   def __repr__(self):

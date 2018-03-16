@@ -9,7 +9,7 @@ This is a collection of simple python scripts to calculate the sensitivity for a
 
 ## Usage
 
-The user code is in `toysens.main()`.
+The user code is in `main.py`.
 
 First, the user needs to specify, for each part of the Detector in the actual experiment, 
 the true specific activity, the hit efficiency and the mass. For example, for `ncomp` identical parts:
@@ -64,7 +64,7 @@ Available priors (`method`):
 
 ## Quick start
 
-`python toysens.py <ntoys> <true_lambda> <ncomp> <spec_act> <livetime> <method> <nsenstoys>`
+`python main.py <ntoys> <true_lambda> <ncomp> <spec_act> <livetime> <method> <nsenstoys>`
 
 1. `ntoys`: Number of toy MCs for the assay procedure
 2. `true_lambda`: Expected true total background rate

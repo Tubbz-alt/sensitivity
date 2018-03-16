@@ -16,6 +16,7 @@ class Detector:
   def throw(self,method):
     s = 0 
     for c in self.components:
+      #print('throw c',c)
       s += c.throw(method)
     return s #sum([c.throw() for c in self.components])
 
