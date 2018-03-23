@@ -2,7 +2,7 @@ import numpy as np
 #from TimeProfiler import *
 import math,sys
 
-from detector import Detector, Component
+from detector import Detector, Component, define_detector
 from assay import Assay
 from facilities import HPGe
 import toysens
@@ -20,8 +20,8 @@ from ROOT import *
 def main(ntoys, true_lambda, ncomp, spec_act, livetime, method, nsenstoys):
 
   # Define detector and its parts
-  comps = []
-  mass = 1  #per comp
+  #comps = []
+  #mass = 1  #per comp
   usetruth = (method == 'Truth')
 
   print('Arguments:')
@@ -31,59 +31,9 @@ def main(ntoys, true_lambda, ncomp, spec_act, livetime, method, nsenstoys):
   print('livetime',livetime)
   print('method',method)
   print('nsenstoys',nsenstoys)
-  print('mass',mass)
+  #print('mass',mass)
 
-  if ncomp == 0: # Realistic detector type 0
-    spec_acts = [5e-6, 20e-6, 100e-6]
-
-    nregions = len(spec_acts)
-    nparts = 10    # Number of parts 
-    budgetPerPart = true_lambda/nregions/nparts
-   
-    effs = [1.*budgetPerPart/s/livetime/mass for s in spec_acts]
-
-    #print('spec_acts',spec_acts)
-    #print('effs',effs)
-
-    for s,e in zip(spec_acts,effs):
-      for i in range(nparts):
-        comps.append(Component(s,e,mass))
-  elif ncomp == -1 or ncomp == -2:  # Realistic detector types 1 and 2
-    # Power low rate. Linear spec act distrib.
-    # Type 1: small x with large eff
-    # Type 2: large x with large eff
-
-    nparts = 10   # Number of parts
-    #spec_act = 100e-6
-
-    b = 0.5 #math.log(1.7)
-    
-    allocations = [math.exp(-i*b) for i in range(nparts)]
-    allocations = [a*true_lambda/sum(allocations) for a in allocations]
-    
-    if ncomp == -1:
-      spec_acts = [(i+1)*spec_act/nparts for i in range(nparts)]
-    elif ncomp == -2:
-      spec_acts = [(nparts-i)*spec_act/nparts for i in range(nparts)]
-    
-    effs = [a/x/livetime/mass for a,x in zip(allocations,spec_acts)]
-    
-    #print('spec_acts',spec_acts)
-    #print('effs',effs)
-
-    for s,e in zip(spec_acts,effs):
-      comps.append(Component(s,e,mass))
-
-  else: # Detector with identical parts
-    eff = 1.*true_lambda/ncomp/spec_act/livetime/mass
-  
-    #print('spec_act',spec_act)
-    #print('eff',eff)
-    # ===
-
-    for ic in range(ncomp):
-      comps.append(Component(spec_act,eff,mass))
-  det = Detector(comps)
+  det = define_detector(true_lambda, ncomp, spec_act, livetime)
   print('det',det)
 
   # Assay settings

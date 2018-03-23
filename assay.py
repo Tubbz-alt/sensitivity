@@ -15,6 +15,11 @@ class Assay:
         while True:
           value = np.random.normal(self.params['mu'],self.params['sigma'])
           if value >= 0: break
+      elif method[:2] == 'V:': 
+        nsig = float(method.split(':')[1])
+        nparts = float(method.split(':')[2])
+        value = self.params['original']['mu'] + nsig*self.params['original']['sigma']/math.sqrt(nparts)
+        value = max(value,0)
       else:
         value = 0
 
@@ -41,6 +46,12 @@ class Assay:
         while True:
           value = np.random.normal(mu,sigma)
           if value >= 0: break
+
+      elif method[:2] == 'V:':
+        nsig = float(method.split(':')[1])
+        nparts = float(method.split(':')[2])
+        value = self.params['original']['mu'] + nsig*self.params['original']['sigma']/math.sqrt(nparts)
+        value = max(value,0)
 
       else:
         value = 0
