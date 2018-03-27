@@ -3,15 +3,15 @@
 This is a collection of simple python scripts to calculate the sensitivity for a basic counting experiment under different interpretations of radioassay results.
 
 ## Prerequisites
-1. Python 2.7
+1. Python 3.4 (recommended) or 2.7
 2. PyROOT (for histogramming and Feldman-Cousins calculator)
 3. numpy (for random number generation and miscellaneous numerical utilities)
 
 ## Usage
 
-The user code is in `main.py`.
+Examples of user code can be found in `main.py` and in `sigma.py`.
 
-First, the user needs to specify, for each part of the Detector in the actual experiment, 
+First, for each part of the Detector in the actual experiment, the user needs to specify, 
 the true specific activity, the hit efficiency and the mass. For example, for `ncomp` identical parts:
 ```
 from detector import Detector, Component

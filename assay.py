@@ -7,6 +7,7 @@ class Assay:
 
   def throw(self,method):
     #self.parse(method)
+    #print('assay.throw method',method)
 
     if 'mu' in self.params.keys():  # Discovery
       if method in ['Central', 'DeltaUniform', 'DeltaGauss0', 'CTG']:  # Delta/*
@@ -20,6 +21,8 @@ class Assay:
         nparts = float(method.split(':')[2])
         value = self.params['original']['mu'] + nsig*self.params['original']['sigma']/math.sqrt(nparts)
         value = max(value,0)
+      elif method == 'FullGauss': 
+        value = np.random.normal(self.params['mu'],self.params['sigma'])
       else:
         value = 0
 
@@ -52,6 +55,11 @@ class Assay:
         nparts = float(method.split(':')[2])
         value = self.params['original']['mu'] + nsig*self.params['original']['sigma']/math.sqrt(nparts)
         value = max(value,0)
+
+      elif method == 'FullGauss': 
+        mu = self.params['original']['mu']
+        sigma = self.params['original']['sigma']
+        value = np.random.normal(mu,sigma)
 
       else:
         value = 0

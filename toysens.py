@@ -74,6 +74,7 @@ def calc_sens(det, method, livetime, ntoys, truth):
     #if i % (ntoys//10) == 0: print(i )
 
     true_counts = det.throw(method)*livetime if not truth else ult_truth
+    true_counts = max(0,true_counts)
     counts = np.random.poisson(true_counts)
 
     #print('pre-fc',counts,true_counts)
@@ -89,6 +90,7 @@ def calc_sens(det, method, livetime, ntoys, truth):
   return meanul, upperlimits
   
 def calc_sens2(det, method, livetime, ntoys, truth):
+  #print('calc_sens2',method,truth)
   
   upperlimits = []
   meanul = 0
@@ -96,7 +98,9 @@ def calc_sens2(det, method, livetime, ntoys, truth):
   ult_truth = det.truth()*livetime
 
   true_counts = det.throw(method)*livetime if not truth else ult_truth
-
+  true_counts = max(0,true_counts)
+  #print('true_counts',true_counts)
+  
   for i in range(ntoys):
     #if i % (ntoys//10) == 0: print(i )
 
@@ -112,5 +116,6 @@ def calc_sens2(det, method, livetime, ntoys, truth):
   meanul /= ntoys
   #return np.percentile(upperlimits,50), upperlimits
   #return np.mean(upperlimits), upperlimits
+
   return meanul, upperlimits
   
