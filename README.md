@@ -9,7 +9,7 @@ This is a collection of simple python scripts to calculate the sensitivity for a
 
 ## Usage
 
-Examples of user code can be found in `main.py` and in `sigma.py`.
+Examples of user code can be found in `main.py`.
 
 First, for each part of the Detector in the actual experiment, the user needs to specify, 
 the true specific activity, the hit efficiency and the mass. For example, for `ncomp` identical parts:
