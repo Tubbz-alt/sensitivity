@@ -1,5 +1,4 @@
 import numpy as np
-from scipy import special
 
 class Assay:
   def __init__(self,params):
@@ -69,31 +68,6 @@ class Assay:
 
   def __repr__(self):
     return str(self.params)
-
-def hgprior(x,par):
-  s = par[1]
-  b = par[2]
-  A = par[0]
-  mu = x
-  value = A* math.exp(-mu) * (mu**(s+b+1)) * special.hyperu(b+1,s+b+2,2*mu)
-  '''
-  value = A* math.exp(-mu) 
-  print 'a',value
-  for i in range(1,s):
-    value /= i
-    value *= mu
-  print 'b',value
-  for i in range(b+1):
-    value *= mu
-  print 'c',value
-  value *= special.hyperu(b+1,s+b+2,2*mu)
-  print 'z',value
-  return value
-  '''
-  for i in range(1,s):
-    value /= i
-  return value
-  #return A* math.exp(-mu) * (mu**(s+b+1)) / math.factorial(s) * special.hyperu(b+1,s+b+2,2*mu) 
 
 from ROOT import * 
 import math

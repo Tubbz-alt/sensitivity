@@ -1,5 +1,4 @@
 import numpy as np
-#from TimeProfiler import *
 import math,sys
 
 from detector import Detector, Component
@@ -19,7 +18,6 @@ gStyle.SetOptStat(0)
 FeldmanCousins = TFeldmanCousins()
 fc_cache = {}
 
-#@profile
 def print_histo(l):
   histo = TH1D('histo','histo',50,0,50)
   for v in l:
@@ -30,7 +28,6 @@ def print_histo(l):
   histo.Draw()
   canvas.SaveAs('histo.png')
 
-#@profile
 def feldman(counts,true_counts):
 
   cache_key = str([counts,"%.2f"%true_counts])
@@ -62,7 +59,6 @@ def feldman(counts,true_counts):
   fc_cache[cache_key] = fcul
   return fcul
 
-#@profile
 def calc_sens(det, method, livetime, ntoys, truth):
   
   upperlimits = []

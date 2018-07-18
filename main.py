@@ -1,12 +1,10 @@
 import numpy as np
-#from TimeProfiler import *
 import math,sys
 
 from detector import Detector, Component, define_detector
 from assay import Assay
 from facilities import HPGe
 import toysens
-#from toysens import calc_sens
 
 from ROOT import *
 
@@ -16,7 +14,6 @@ from ROOT import *
 #   livetime: s
 #   rate: Hz
 
-#@profile
 def main(ntoys, true_lambda, ncomp, spec_act, livetime, method, nsenstoys):
 
   # Define detector and its parts
@@ -81,8 +78,6 @@ if __name__ == '__main__':
   livetime = float(sys.argv[5])*86400*365
   method = sys.argv[6]
   nsenstoys = int(sys.argv[7])
-  #usetruth = int(sys.argv[8])
  
   main(ntoys, true_lambda, ncomp, spec_act, livetime, method, nsenstoys)
-  #print_prof_data()
   print('cache_size',len(toysens.fc_cache))
