@@ -2,6 +2,8 @@
 
 This is a collection of simple python scripts to calculate the sensitivity for a basic counting experiment under different interpretations of radioassay results.
 
+Author: [Raymond Tsang](https://github.com/rhmtsang)
+
 ## Prerequisites
 1. Python 3.4 (recommended) or 2.7
 2. PyROOT (for histogramming and Feldman-Cousins calculator)
