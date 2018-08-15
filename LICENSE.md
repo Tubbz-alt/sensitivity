@@ -2,6 +2,7 @@ Sensitivity calculator for low-background experiments
 ===========
 
 _Copyright © 2018, Battelle Memorial Institute_
+
 _All rights reserved._
 
 1. Battelle Memorial Institute (hereinafter Battelle) hereby grants permission to any person or entity lawfully obtaining a copy of this software and associated documentation files (hereinafter “the Software”) to redistribute and use the Software in source and binary forms, with or without modification.  Such person or entity may use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and may permit others to do so, subject to the following conditions:
